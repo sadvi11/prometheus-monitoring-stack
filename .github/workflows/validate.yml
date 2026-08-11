@@ -1,0 +1,40 @@
+name: Validate stack
+
+# A monitoring stack whose config does not parse is worse than no monitoring:
+# Prometheus refuses to start and the thing meant to tell you something broke
+# is the thing that is broken. promtool catches that before it ships.
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Prometheus config and Compose file
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate prometheus.yml with promtool
+        run: |
+          docker run --rm -v "$PWD:/work" -w /work \
+            --entrypoint promtool prom/prometheus:latest check config prometheus.yml
+
+      - name: Validate the Compose file resolves
+        run: |
+          docker compose -f docker-compose.yml config >/dev/null
+          echo "docker-compose.yml is valid"
+
+      - name: Every service must pin an image tag
+        run: |
+          # `latest` means two people running this stack get different builds,
+          # and a dashboard that worked yesterday can break with no commit.
+          if grep -nE 'image:.*:latest|image: [^:]+$' docker-compose.yml; then
+            echo "::error::service image is unpinned or uses :latest"
+            exit 1
+          fi
+          echo "all images pinned"
