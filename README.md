@@ -1,5 +1,11 @@
 # Prometheus + Grafana Monitoring Stack
 
+[![Validate](https://github.com/sadvi11/prometheus-monitoring-stack/actions/workflows/validate.yml/badge.svg)](https://github.com/sadvi11/prometheus-monitoring-stack/actions/workflows/validate.yml)
+![Prometheus](https://img.shields.io/badge/Prometheus-scrape%2015s-E6522C?logo=prometheus&logoColor=white)
+![Grafana](https://img.shields.io/badge/Grafana-live%20dashboards-F46800?logo=grafana&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker%20Compose-3%20services-2496ED?logo=docker&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
+
 A production-pattern observability stack that collects live host metrics and visualizes them on real-time dashboards. Built with Prometheus, Grafana, and Node Exporter, running on Docker Compose.
 
 **Live metrics:** CPU usage and memory usage, scraped every 15 seconds and displayed on a Grafana dashboard.
