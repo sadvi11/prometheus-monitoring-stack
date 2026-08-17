@@ -12,6 +12,26 @@ A production-pattern observability stack that collects live host metrics and vis
 
 ---
 
+
+## What it actually produces
+
+Real output from the [latest CI run](https://github.com/sadvi11/prometheus-monitoring-stack/actions).
+The configuration is checked with Prometheus' own tooling, not by eye:
+
+```console
+$ promtool check config prometheus.yml
+Checking prometheus.yml
+ SUCCESS: prometheus.yml is valid prometheus config file syntax
+
+$ docker compose config --quiet
+docker-compose.yml is valid
+```
+
+`promtool` is the same binary Prometheus uses to parse its config at startup,
+so a scrape config that would fail on boot fails here first - which is the
+point of validating with the real parser rather than a YAML linter.
+
+
 ## Why I built this
 
 I operated a cloud-native 5G core at Nokia, on-call for production infrastructure at a 99.9% SLA serving 100,000+ subscribers per deployment. You cannot hold an SLA you cannot see - monitoring is what makes an SLA measurable, and it is what wakes you up before a customer notices something is wrong.
